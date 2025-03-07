@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF登録</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            background: #f5f5f5;
+        }
+        #filelist-container, #page-list-container {
+            width: 30%;
+            padding: 20px;
+            background: #eeeeee;
+            box-sizing: border-box;
+            overflow-y: auto; /* スクロールを有効にする */
+        }
+        #file-list, #page-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .file-item {
+            background: #fff;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .page-item {
+            background: #fff;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            justify-content: space-between;
+            align-items: center;
+            display: flex;
+        }
+        .file-item:hover, .page-item:hover {
+            background: #ddd;
+        }
+        #drop-area {
+            width: 100%;
+            height: 150px;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+            background: #fff;
+            border-radius: 5px;
+        }
+        #preview-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            overflow-y: auto;
+            margin-left: 20px; 
+            box-sizing: border-box;
+        }
+        .pdf-page {
+            border: 1px solid black;
+            margin-bottom: 10px;
+            max-width: 100%;
+        }
+        .add-button, .remove-button, .toggle-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .add-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .remove-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .toggle-button {
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-left: 10px;
+        }
+        .page-list {
+            padding-left: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="filelist-container">
+        <h5>Nikoichi-PDF JSON生成</h5>
+        <div id="drop-area" class="card-panel">ここにPDFをD&D</div>
+        <input type="text" id="export-file-name" placeholder="ファイル名を入力" class="input-field">
+        <button id="generate-json" class="btn waves-effect waves-light">JSON生成</button>
+        <button id="preview-generate-pdf" class="btn waves-effect waves-light">生成プレビューボタン</button>
+        <ul id="file-list" class="collection"></ul>
+    </div>
+    <div id="page-list-container">
+        <h5>ページ一覧</h5>
+        <ul id="page-list" class="collection"></ul>
+    </div>
+    <div id="preview-container">
+        <h5>プレビュー</h5>
+    </div>
+
+    <script>
+        const dropArea = document.getElementById("drop-area");
+        const fileList = document.getElementById("file-list");
+        const pageList = document.getElementById("page-list");
+        const previewContainer = document.getElementById("preview-container");
+        const generateJsonBtn = document.getElementById("generate-json");
+        const previewFinalPdfBtn = document.getElementById("preview-generate-pdf");
+        const exportFileNameInput = document.getElementById("export-file-name");
+        let pdfFiles = new Map();
+        let finalPages = [];
+
+        dropArea.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            dropArea.style.borderColor = "blue";
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.style.borderColor = "#ccc";
+        });
+
+        dropArea.addEventListener("drop", (event) => {
+            event.preventDefault();
+            dropArea.style.borderColor = "#ccc";
+            
+            const files = Array.from(event.dataTransfer.files);
+            files.forEach(file => {
+                if (file.type === "application/pdf") {
+                    if (!pdfFiles.has(file.name)) {
+                        const fileURL = URL.createObjectURL(file);
+                        pdfFiles.set(file.name, { url: fileURL, pages: [], pushPages: [], totalPages: 0 });
+                        loadPDFMetadata(file.name, fileURL);
+                    } else {
+                        M.toast({html: "同じファイルは複数登録できません。"});
+                    }
+                } else {
+                    M.toast({html: "PDFファイルのみ対応しています。"});
+                }
+            });
+        });
+
+        function loadPDFMetadata(fileName, fileURL) {
+            pdfjsLib.getDocument(fileURL).promise.then(pdf => {
+                pdfFiles.get(fileName).totalPages = pdf.numPages;
+                updateFileList();
+            });
+        }
+
+        function updateFileList() {
+            fileList.innerHTML = "";
+            pdfFiles.forEach((data, name) => {
+                const li = document.createElement("li");
+                li.classList.add("collection-item", "file-item");
+                li.setAttribute("data-name", name);
+                
+                const fileItemContent = document.createElement("div");
+                fileItemContent.style.display = "flex";
+                fileItemContent.style.alignItems = "baseline";
+
+                const fileNameSpan = document.createElement("span");
+                fileNameSpan.textContent = name;
+
+                const toggleButton = document.createElement("button");
+                toggleButton.textContent = "展開";
+                toggleButton.classList.add("btn", "blue", "toggle-button");
+                toggleButton.addEventListener("click", () => {
+                    const pageList = li.querySelector("ul");
+                    if (pageList.classList.contains("hidden")) {
+                        pageList.classList.remove("hidden");
+                        toggleButton.textContent = "閉じる";
+                    } else {
+                        pageList.classList.add("hidden");
+                        toggleButton.textContent = "展開";
+                    }
+                });
+
+                fileItemContent.appendChild(fileNameSpan);
+                fileItemContent.appendChild(toggleButton);
+
+                const pageList = document.createElement("ul");
+                pageList.classList.add("page-list", "hidden");
+
+                for (let i = 1; i <= data.totalPages; i++) {
+                    const pageItem = document.createElement("li");
+                    pageItem.style.display = "flex";
+                    pageItem.style.alignItems = "center";
+                    pageItem.textContent = `ページ ${i}`;
+
+                    const addButton = document.createElement("button");
+                    addButton.textContent = "追加";
+                    addButton.classList.add("btn", "green", "add-button");
+                    addButton.style.marginLeft = "10px";
+                    addButton.addEventListener("click", () => {
+                        insertPage(name, i);
+                    });
+
+                    pageItem.appendChild(addButton);
+                    pageList.appendChild(pageItem);
+                }
+
+                li.appendChild(fileItemContent);
+                li.appendChild(pageList);
+                fileList.appendChild(li);
+            });
+        }
+
+        function insertPage(fileName, pageNumber) {
+            const pageItem = {
+                fileName: fileName,
+                pageNumber: pageNumber,
+                pushPage: finalPages.length + 1
+            };
+            finalPages.push(pageItem);
+            updatePageList();
+        }
+
+        function updatePageList() {
+            pageList.innerHTML = "";
+            finalPages.forEach((pageItem, index) => {
+                pageItem.pushPage = index + 1; // Update pushPage to reflect the new order
+                const li = document.createElement("li");
+                li.classList.add("collection-item", "page-item");
+                li.textContent = `${pageItem.pushPage}ページ目: ${pageItem.fileName}(${pageItem.pageNumber}ページ目)`;
+
+                // 削除ボタンを追加
+                const removeButton = document.createElement("button");
+                removeButton.textContent = "削除";
+                removeButton.classList.add("btn", "red", "remove-button");
+                removeButton.addEventListener("click", () => {
+                    finalPages = finalPages.filter(item => item !== pageItem);
+                    updatePageList();
+                });
+
+                li.appendChild(removeButton);
+                pageList.appendChild(li);
+            });
+        }
+
+        function renderPreview() {
+            previewContainer.innerHTML = '<h5>プレビュー</h5>';
+            finalPages.forEach(pageItem => {
+                const canvas = document.createElement("canvas");
+                canvas.classList.add("pdf-page");
+                previewContainer.appendChild(canvas);
+                renderPage(pageItem, canvas);
+            });
+        }
+
+        function renderPage(pageItem, canvas) {
+            const fileData = pdfFiles.get(pageItem.fileName);
+            pdfjsLib.getDocument(fileData.url).promise.then(pdf => {
+                pdf.getPage(pageItem.pageNumber).then(page => {
+                    const context = canvas.getContext("2d");
+                    const viewport = page.getViewport({ scale: 1.0 });
+
+                    // Calculate the scale to fit the canvas within the preview container
+                    const containerWidth = document.getElementById("preview-container").clientWidth;
+                    const scale = containerWidth / viewport.width;
+
+                    const scaledViewport = page.getViewport({ scale: scale });
+                    canvas.width = scaledViewport.width;
+                    canvas.height = scaledViewport.height;
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: scaledViewport
+                    };
+                    page.render(renderContext);
+                });
+            });
+        }
+
+        generateJsonBtn.addEventListener("click", () => {
+            const exportFileName = exportFileNameInput.value.trim();
+            if (!exportFileName) {
+                alert("ファイル名を入力してください。");
+                return;
+            }
+
+            const result = {
+                ExportFileName: exportFileName,
+                TotalPages: finalPages.length,
+                RequiredFiles: []
+            };
+            const fileMap = new Map();
+            finalPages.forEach(pageItem => {
+                if (!fileMap.has(pageItem.fileName)) {
+                    fileMap.set(pageItem.fileName, []);
+                }
+                fileMap.get(pageItem.fileName).push({
+                    ImportPageNumber: pageItem.pageNumber,
+                    PushPage: pageItem.pushPage
+                });
+            });
+            fileMap.forEach((importPages, fileName) => {
+                result.RequiredFiles.push({
+                    FilePath: fileName,
+                    ImportPages: importPages
+                });
+            });
+            const json = JSON.stringify(result, null, 2);
+            console.log(json);
+            // ダウンロードリンクを作成してJSONをダウンロード
+            const blob = new Blob([json], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${exportFileName}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        previewFinalPdfBtn.addEventListener("click", () => {
+            if (finalPages.length > 0) {
+                renderPreview();
+            } else {
+                alert("ページが選択されていません。");
+            }
+        });
+
+        // SortableJSを使用してページ一覧をドラッグで並べ替え可能にする
+        new Sortable(pageList, {
+            animation: 150,
+            onEnd: function (evt) {
+                const newOrder = [];
+                pageList.querySelectorAll(".page-item").forEach((item) => {
+                    const pageIndex = parseInt(item.textContent.split("ページ目")[0]) - 1;
+                    newOrder.push(finalPages[pageIndex]);
+                });
+                finalPages = newOrder;
+                updatePageList();
+            }
+        });
+    </script>
+</body>
+</html>
