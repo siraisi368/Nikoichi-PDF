@@ -115,8 +115,8 @@ namespace Nikoichi_PDF
             };
             if(ofd.ShowDialog() == DialogResult.OK)
             {
-                textBox1.Text = ofd.Path+@"\generate\";
-                savePath = ofd.Path + @"\generate\";
+                textBox1.Text = ofd.Path+@"\";
+                savePath = ofd.Path + @"\";
             }
         }
 
