@@ -12,6 +12,7 @@ namespace Nikoichi_PDF
     {
         public string FilePath { get; set; }
         public List<ImportPage> ImportPages { get; set; }
+        public bool fileExists { get; set; } = false;
     }
 
     public class nikoJsonWrap

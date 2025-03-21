@@ -14,9 +14,15 @@ namespace Nikoichi_PDF
         [STAThread]
         static void Main()
         {
+            // 実行ファイルにドラッグ&ドロップされたファイルを取得
+            string[] exeDaDfiles = Environment.GetCommandLineArgs().Skip(1).ToArray();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            Form1 form1 = new Form1();
+            form1.exeDaDFiles = exeDaDfiles;
+            Application.Run(form1);
         }
     }
 }
