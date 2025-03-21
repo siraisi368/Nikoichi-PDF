@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "G:\\javascript\\Nikoichi-PDF\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|G:\\javascript\\Nikoichi-PDF\\nikoichi-pdf\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|solutionrelative:nikoichi-pdf\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|G:\\javascript\\Nikoichi-PDF\\nikoichi-pdf\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|solutionrelative:nikoichi-pdf\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|g:\\javascript\\nikoichi-pdf\\nikoichi-pdf\\pdfgen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|solutionrelative:nikoichi-pdf\\pdfgen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|G:\\javascript\\Nikoichi-PDF\\nikoichi-pdf\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{5B802CCC-E727-4CC7-A941-157F09D02073}|Nikoichi-PDF\\Nikoichi-PDF.csproj|solutionrelative:nikoichi-pdf\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
@@ -66,7 +66,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\Program.cs",
               "RelativeDocumentMoniker": "Nikoichi-PDF\\Program.cs",
@@ -79,7 +79,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "nikoJsonWrap.cs",
               "DocumentMoniker": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\nikoJsonWrap.cs",
               "RelativeDocumentMoniker": "Nikoichi-PDF\\nikoJsonWrap.cs",
@@ -92,7 +92,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "PDFGen.cs",
               "DocumentMoniker": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\PDFGen.cs",
               "RelativeDocumentMoniker": "Nikoichi-PDF\\PDFGen.cs",
@@ -105,25 +105,25 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Form1.cs",
               "DocumentMoniker": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\Form1.cs",
               "RelativeDocumentMoniker": "Nikoichi-PDF\\Form1.cs",
-              "ToolTip": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\Form1.cs",
-              "RelativeToolTip": "Nikoichi-PDF\\Form1.cs",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAcwFQAAAAyAAAAAAAAAA==",
+              "ToolTip": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\Form1.cs*",
+              "RelativeToolTip": "Nikoichi-PDF\\Form1.cs*",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAuwGAAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-17T15:27:54.501Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "Form1.cs [\u30C7\u30B6\u30A4\u30F3]",
               "DocumentMoniker": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\Form1.cs",
               "RelativeDocumentMoniker": "Nikoichi-PDF\\Form1.cs",
-              "ToolTip": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\Form1.cs [\u30C7\u30B6\u30A4\u30F3]",
-              "RelativeToolTip": "Nikoichi-PDF\\Form1.cs [\u30C7\u30B6\u30A4\u30F3]",
+              "ToolTip": "G:\\javascript\\Nikoichi-PDF\\Nikoichi-PDF\\Form1.cs [\u30C7\u30B6\u30A4\u30F3]*",
+              "RelativeToolTip": "Nikoichi-PDF\\Form1.cs [\u30C7\u30B6\u30A4\u30F3]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-17T15:06:12.099Z",
               "EditorCaption": " [\u30C7\u30B6\u30A4\u30F3]"
